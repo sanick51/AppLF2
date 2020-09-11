@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class State {
-	private boolean isInit, isFinal;
-	private int id;
-	private String label;
-	private List<Transition> inTransitions;
-	private List<Transition> outTransitions;
+	protected boolean isInit, isFinal;
+	protected String label;
+	protected List<Transition> inTransitions;
+	protected List<Transition> outTransitions;
 	
-	public State(int id, String label) {
-		this.id = id;
+	public State() {
+		this.inTransitions = new ArrayList<Transition>();
+		this.outTransitions = new ArrayList<Transition>();
+	}
+	
+	public State(String label) {
 		this.label = label;
 		this.inTransitions = new ArrayList<Transition>();
 		this.outTransitions = new ArrayList<Transition>();
@@ -27,10 +30,6 @@ public class State {
 	
 	public String getLabel() {
 		return label;
-	}
-	
-	public int getId() {
-		return id;
 	}
 	
 	public void setLabel(String label) {

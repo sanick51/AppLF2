@@ -1,3 +1,5 @@
+package tests_regex;
+
 import lf2.flap.models.entity.Automaton;
 import lf2.flap.models.entity.State;
 
@@ -5,11 +7,11 @@ public class TestAutomaton {
 	public static void main(String[] args) {
 		Automaton a = new Automaton();
 		
-		State s0 = new State(0, "q0");
-		State s1 = new State(0, "q1");
-		State s2 = new State(0, "q2");
-		State s3 = new State(0, "q3");
-		State s4 = new State(0, "q4");
+		State s0 = new State("q0");
+		State s1 = new State("q1");
+		State s2 = new State("q2");
+		State s3 = new State("q3");
+		State s4 = new State("q4");
 		
 		s0.setInit(true);
 		s4.setFinal(true);

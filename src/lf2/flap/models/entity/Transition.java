@@ -1,26 +1,19 @@
 package lf2.flap.models.entity;
 
 public class Transition {
-	private int id;
 	private String value;
 	private State startState, endState;
 	
-	public Transition(int id, String value, State start, State end) {
-		this.id = id;
+	public Transition(String value, State start, State end) {
 		this.value = value;
 		this.startState = start;
 		this.endState = end;
 	}
 	
-	public Transition(int id, String value, State state) {
-		this.id = id;
+	public Transition(String value, State state) {
 		this.value = value;
 		this.startState = state;
 		this.endState = state;
-	}
-	
-	public int getId() {
-		return id;
 	}
 	
 	public boolean isRecursive() {

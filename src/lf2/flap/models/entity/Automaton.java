@@ -31,14 +31,14 @@ public class Automaton {
 	}
 
 	public void createTransition(String value, State start, State end) {
-		Transition t = new Transition(0, value, start, end);
+		Transition t = new Transition(value, start, end);
 		start.getOutTransitions().add(t);
 		end.getInTransitions().add(t);
 		this.transitions.add(t);
 	}
 
 	public void createTransition(String value, State state) {
-		Transition t = new Transition(0, value, state);
+		Transition t = new Transition(value, state);
 		state.getOutTransitions().add(t);
 		state.getInTransitions().add(t);
 		this.transitions.add(t);
