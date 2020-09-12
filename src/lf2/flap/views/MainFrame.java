@@ -4,12 +4,16 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
+import lf2.flap.views.menus.MainMenuBar;
+
 
 public class MainFrame extends JFrame {
+	private MainMenuBar menuBar;
 	private Canvas canvas;
 	
 	public MainFrame() {
 		this.canvas = new Canvas();
+		this.menuBar = new MainMenuBar();
 		this.init();
 	}
 	
@@ -21,6 +25,7 @@ public class MainFrame extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		this.setJMenuBar(this.menuBar);
 		this.add(canvas, BorderLayout.CENTER);
 	
 		this.setVisible(true);
