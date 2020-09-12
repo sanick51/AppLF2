@@ -1,4 +1,4 @@
-package lf2.flap.view;
+package lf2.flap.views;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
