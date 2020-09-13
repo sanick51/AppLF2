@@ -33,11 +33,12 @@ public class MoveListerner implements MouseListener, MouseMotionListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		StateFigure f = this.canvas.getStateFigureMouse(e.getPoint());
+
 		if (this.selectedState != null && this.selectedState != f) {
 			this.selectedState.setSelected(false);
 			this.selectedState = null;
 		}
-			
+
 		if (f != null) {
 			this.selectedState = this.draggedState = f;
 		}
@@ -45,24 +46,35 @@ public class MoveListerner implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (this.draggedState == null) {
-				this.canvas.createNode(e.getPoint());
-		} else {
-			if (e.getPoint().distance(this.selectedState.getPosition()) <= StateFigure.RADIUS) {
-				if (e.getClickCount() == 2)
-					this.selectedState.setSelected(true);
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			if (this.draggedState == null) {
+					this.canvas.createNode(e.getPoint());
 			} else {
-				StateFigure f = this.canvas.getStateFigureMouse(e.getPoint());
+				if (e.getPoint().distance(this.selectedState.getPosition()) <= StateFigure.RADIUS) {
+					if (e.getClickCount() == 2)
+						this.selectedState.setSelected(true);
+				} else {
+					StateFigure f = this.canvas.getStateFigureMouse(e.getPoint());
 
-				if (f != null) {
-					this.canvas.getAutomaton().createTransition("A", draggedState, f);
+					if (f != null) {
+						this.canvas.getAutomaton().createTransition("A", draggedState, f);
+					}
 				}
 			}
-
-			this.canvas.setLinePoints(null, null);
-			this.draggedState = null;
+		} else if (e.getButton() == MouseEvent.BUTTON3) {
+			if (this.selectedState != null) {
+				if(this.canvas.getAutomaton().isThereInitialState()) {
+					if(this.selectedState.isInit())
+						this.canvas.getCanvasPopupMenu().getComponents()[0].setVisible(true);
+					else 
+						this.canvas.getCanvasPopupMenu().getComponents()[0].setVisible(false);
+				}
+				this.canvas.getCanvasPopupMenu().show(canvas, e.getX(), e.getY());
+			}
 		}
-
+		
+		this.canvas.setLinePoints(null, null);
+		this.draggedState = null;
 		this.canvas.repaint();
 	}
 
@@ -80,6 +92,14 @@ public class MoveListerner implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+	}
+	
+	public void repaint() {
+		this.canvas.repaint();
+	}
+	
+	public StateFigure getSelectedState() {
+		return selectedState;
 	}
 
 	public void setCanvas(Canvas canvas) {

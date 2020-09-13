@@ -6,7 +6,7 @@ import java.util.List;
 public class Automaton {
 	private List<State> states;
 	private List<Transition> transitions;
-	private State initialState;
+	protected State initialState;
 
 	public Automaton() {
 		this.states = new ArrayList<State>();
@@ -86,6 +86,10 @@ public class Automaton {
 
 	public List<Transition> getTransitions() {
 		return transitions;
+	}
+	
+	public boolean isThereInitialState() {
+		return initialState != null;
 	}
 
 }

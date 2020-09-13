@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import lf2.flap.models.entity.Automaton;
 import lf2.flap.models.entity.State;
 import lf2.flap.models.entity.Transition;
 
@@ -12,6 +13,10 @@ public class StateFigure extends State {
 	protected float x;
 	protected float y;
 	private boolean isSelected = false;;
+	
+	public StateFigure(Automaton automaton) {
+		super(automaton);
+	}
 
 	public void draw(Graphics g) {
 		for (Transition t : outTransitions) {

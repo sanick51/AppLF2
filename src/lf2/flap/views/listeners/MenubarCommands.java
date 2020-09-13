@@ -1,5 +1,5 @@
 package lf2.flap.views.listeners;
 
-public enum MenubarCommands {
+public enum MenubarCommands implements MenuCommander {
 	HELP_CONTENTS, ABOUT
 }
