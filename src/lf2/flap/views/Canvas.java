@@ -19,10 +19,6 @@ public class Canvas extends JPanel {
 
 	public Canvas() {
 		this.automaton = new Automaton();
-		
-		this.createNode(100, 100);
-		this.automaton.createTransition("T", automaton.getStates().get(0));
-		
 		this.canvasPopupMenu = new CanvasPopupMenu();
 		this.popupInputMenu = new PopupInputMenu(this);
 		MoveListerner.getInstance().setCanvas(this);
