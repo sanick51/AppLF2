@@ -13,19 +13,19 @@ public class CanvasMenuListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		switch (CanvasMenuCommands.valueOf(e.getActionCommand())) {
 		case TOGGLE_INIT:
-			if(!MoveListerner.getInstance().getSelectedState().isInit())
-				MoveListerner.getInstance().getSelectedState().setInit(true);
+			if(!MoveListerner.getInstance().getDraggedState().isInit())
+				MoveListerner.getInstance().getDraggedState().setInit(true);
 			else
-				MoveListerner.getInstance().getSelectedState().setInit(false);
+				MoveListerner.getInstance().getDraggedState().setInit(false);
 			
 			MoveListerner.getInstance().repaint();
 			break;
 			
 		case TOGGLE_FINAL:
-			if(!MoveListerner.getInstance().getSelectedState().isFinal())
-				MoveListerner.getInstance().getSelectedState().setFinal(true);
+			if(!MoveListerner.getInstance().getDraggedState().isFinal())
+				MoveListerner.getInstance().getDraggedState().setFinal(true);
 			else
-				MoveListerner.getInstance().getSelectedState().setFinal(false);
+				MoveListerner.getInstance().getDraggedState().setFinal(false);
 			
 			MoveListerner.getInstance().repaint();
 			break;

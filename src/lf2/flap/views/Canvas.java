@@ -9,21 +9,29 @@ import lf2.flap.models.entity.Automaton;
 import lf2.flap.models.entity.State;
 import lf2.flap.views.listeners.MoveListerner;
 import lf2.flap.views.menus.CanvasPopupMenu;
+import lf2.flap.views.menus.PopupInputMenu;
 
 public class Canvas extends JPanel {
 	private Automaton automaton;
 	private Point mousePoint, statePoint;
 	private CanvasPopupMenu canvasPopupMenu;
+	private PopupInputMenu popupInputMenu;
 
 	public Canvas() {
 		this.automaton = new Automaton();
+		
+		this.createNode(100, 100);
+		this.automaton.createTransition("T", automaton.getStates().get(0));
+		
 		this.canvasPopupMenu = new CanvasPopupMenu();
+		this.popupInputMenu = new PopupInputMenu(this);
 		MoveListerner.getInstance().setCanvas(this);
 		this.init();
 	}
 
 	private void init() {
 		this.add(this.canvasPopupMenu);
+		this.add(this.popupInputMenu);
 	}
 
 	@Override
@@ -73,5 +81,9 @@ public class Canvas extends JPanel {
 	
 	public CanvasPopupMenu getCanvasPopupMenu() {
 		return canvasPopupMenu;
+	}
+	
+	public PopupInputMenu getPopupInputMenu() {
+		return popupInputMenu;
 	}
 }

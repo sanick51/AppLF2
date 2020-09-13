@@ -13,7 +13,7 @@ public class StateFigure extends State {
 	protected float x;
 	protected float y;
 	private boolean isSelected = false;;
-	
+
 	public StateFigure(Automaton automaton) {
 		super(automaton);
 	}
@@ -44,33 +44,42 @@ public class StateFigure extends State {
 	}
 
 	public void drawLine(Graphics g, StateFigure f, String value) {
-		double relRadius = 1 - RADIUS / getPosition().distance(f.getPosition());
-		double relArrow = 1 - (RADIUS * 1.5) / getPosition().distance(f.getPosition());
-		double slope = -(this.x - f.x) / (this.y - f.y);
-
-		g.drawLine((int) this.x, (int) this.y, (int) (x + (f.x - x) * relRadius), (int) (y + (f.y - y) * relRadius));
-
-		int xm = (int) (x + (f.x - x) * relArrow);
-		int ym = (int) (y + (f.y - y) * relArrow);
-
-		int x1, y1, x2, y2, arrowWidth = 5;
-
-		if (slope <= 1 && slope >= -1) {
-			x1 = xm + arrowWidth;
-			y1 = (int) (slope * (x1 - xm) + ym);
-			x2 = xm - arrowWidth;
-			y2 = (int) (slope * (x2 - xm) + ym);
+		if (f == this) {
+			g.drawArc((int) (x - RADIUS / 2), (int) (y - RADIUS * 5 / 2), RADIUS, RADIUS * 2, 320, 260);
+			g.drawString(value, (int) (x), (int) (y - RADIUS * 5 / 2));
+			g.drawPolyline(
+					new int[] { (int) (x - RADIUS * 9 / 10), (int) (x - RADIUS * 2 / 5), (int) (x - RADIUS / 5) },
+					new int[] { (int) (y - RADIUS * 5 / 4), (int) (y - RADIUS * 9 / 10), (int) (y - RADIUS * 7 / 5) },
+					3);
 		} else {
-			y1 = ym + arrowWidth;
-			x1 = (int) ((y1 - ym) / slope + xm);
-			y2 = ym - arrowWidth;
-			x2 = (int) ((y2 - ym) / slope + xm);
+			double relRadius = 1 - RADIUS / getPosition().distance(f.getPosition());
+			double relArrow = 1 - (RADIUS * 1.5) / getPosition().distance(f.getPosition());
+			double slope = -(this.x - f.x) / (this.y - f.y);
+
+			g.drawLine((int) this.x, (int) this.y, (int) (x + (f.x - x) * relRadius),
+					(int) (y + (f.y - y) * relRadius));
+
+			int xm = (int) (x + (f.x - x) * relArrow);
+			int ym = (int) (y + (f.y - y) * relArrow);
+
+			int x1, y1, x2, y2, arrowWidth = 5;
+
+			if (slope <= 1 && slope >= -1) {
+				x1 = xm + arrowWidth;
+				y1 = (int) (slope * (x1 - xm) + ym);
+				x2 = xm - arrowWidth;
+				y2 = (int) (slope * (x2 - xm) + ym);
+			} else {
+				y1 = ym + arrowWidth;
+				x1 = (int) ((y1 - ym) / slope + xm);
+				y2 = ym - arrowWidth;
+				x2 = (int) ((y2 - ym) / slope + xm);
+			}
+
+			g.drawPolyline(new int[] { x1, (int) (x + (f.x - x) * relRadius), x2 },
+					new int[] { y1, (int) (y + (f.y - y) * relRadius), y2 }, 3);
+			g.drawString(value, (int) (x + (f.x - x) * relRadius / 2), (int) (y + (f.y - y) * relRadius / 2));
 		}
-
-		g.drawPolyline(new int[] { x1, (int) (x + (f.x - x) * relRadius), x2 },
-				new int[] { y1, (int) (y + (f.y - y) * relRadius), y2 }, 3);
-		g.drawString(value, (int) (x + (f.x - x) * relRadius / 2), (int) (y + (f.y - y) * relRadius / 2));
-
 	}
 
 	public void setX(int x) {
