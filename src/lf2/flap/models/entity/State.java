@@ -16,8 +16,9 @@ public class State {
 		this.outTransitions = new ArrayList<Transition>();
 	}
 
-	public State(String label) {
+	public State(Automaton automaton, String label) {
 		this.label = label;
+		this.automaton = automaton;
 		this.inTransitions = new ArrayList<Transition>();
 		this.outTransitions = new ArrayList<Transition>();
 	}

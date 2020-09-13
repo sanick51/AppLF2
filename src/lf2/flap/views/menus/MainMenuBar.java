@@ -12,7 +12,24 @@ public class MainMenuBar extends JMenuBar {
 	}
 
 	private void init() {
-		this.add(MenuUtilities.makeMenu("Ayuda", MenuUtilities.makeMenuItems(MenubarListener.getInstance(), new String[] { "Contenido", "Acerca de" },
-				new MenubarCommands[] { MenubarCommands.HELP_CONTENTS, MenubarCommands.ABOUT })));
+		this.add(MenuUtilities.makeMenu("Regex", 
+				MenuUtilities.makeMenuItems(MenubarListener.getInstance(), 
+						new String[] { 
+								"Generar regex", 
+								"Generar automata" 
+						}, new MenubarCommands[] { 
+								MenubarCommands.GENRT_REGEX, 
+								MenubarCommands.GENRT_AUTOM 
+						})));
+		
+		this.add(MenuUtilities.makeMenu("Ayuda", 
+				MenuUtilities.makeMenuItems(MenubarListener.getInstance(), 
+						new String[] { 
+								"Contenido", 
+								"Acerca de" 
+						}, new MenubarCommands[] { 
+								MenubarCommands.HELP_CONTENTS, 
+								MenubarCommands.ABOUT 
+						})));
 	}
 }
