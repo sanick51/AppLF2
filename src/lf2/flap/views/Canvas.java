@@ -8,14 +8,26 @@ import javax.swing.JPanel;
 import lf2.flap.models.entity.Automaton;
 import lf2.flap.models.entity.State;
 import lf2.flap.views.listeners.MoveListerner;
+import lf2.flap.views.menus.CanvasPopupMenu;
+import lf2.flap.views.menus.PopupInputMenu;
 
 public class Canvas extends JPanel {
 	private Automaton automaton;
 	private Point mousePoint, statePoint;
+	private CanvasPopupMenu canvasPopupMenu;
+	private PopupInputMenu popupInputMenu;
 
 	public Canvas() {
 		this.automaton = new Automaton();
+		this.canvasPopupMenu = new CanvasPopupMenu();
+		this.popupInputMenu = new PopupInputMenu(this);
 		MoveListerner.getInstance().setCanvas(this);
+		this.init();
+	}
+
+	private void init() {
+		this.add(this.canvasPopupMenu);
+		this.add(this.popupInputMenu);
 	}
 
 	@Override
@@ -31,11 +43,11 @@ public class Canvas extends JPanel {
 	}
 
 	public void createNode(Point p) {
-		StateFigure figure = new StateFigure();
+		StateFigure figure = new StateFigure(this.automaton);
 		figure.setX(p.x);
 		figure.setY(p.y);
 		figure.setLabel("q" + this.automaton.getStates().size());
-		this.getAutomaton().getStates().add(figure);
+		this.automaton.getStates().add(figure);
 	}
 
 	public void createNode(int x, int y) {
@@ -61,5 +73,13 @@ public class Canvas extends JPanel {
 	public void setLinePoints(Point mousePoint, Point statePoint) {
 		this.mousePoint = mousePoint;
 		this.statePoint = statePoint;
+	}
+	
+	public CanvasPopupMenu getCanvasPopupMenu() {
+		return canvasPopupMenu;
+	}
+	
+	public PopupInputMenu getPopupInputMenu() {
+		return popupInputMenu;
 	}
 }
