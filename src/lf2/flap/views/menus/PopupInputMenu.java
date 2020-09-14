@@ -8,7 +8,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
 import lf2.flap.views.Canvas;
-import lf2.flap.views.StateFigure;
+import lf2.flap.views.figures.StateFigure;
+import lf2.flap.views.figures.TransitionFigure;
 
 public class PopupInputMenu extends JPopupMenu implements KeyListener {
 	private Canvas canvas;
@@ -43,7 +44,7 @@ public class PopupInputMenu extends JPopupMenu implements KeyListener {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			this.canvas.getAutomaton().createTransition(this.inputField.getText(), draggedState, droppedState);
+			this.canvas.getAutomaton().addTransition(new TransitionFigure(this.inputField.getText(), draggedState, droppedState));
 			this.setVisible(false);
 		}else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			this.setVisible(false);

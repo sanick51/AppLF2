@@ -31,5 +31,6 @@ public class MainMenuBar extends JMenuBar {
 								MenubarCommands.HELP_CONTENTS, 
 								MenubarCommands.ABOUT 
 						})));
+		this.add(MenuUtilities.makeMenuItem(MenubarListener.getInstance(), "Reducir", MenubarCommands.ABOUT));
 	}
 }
