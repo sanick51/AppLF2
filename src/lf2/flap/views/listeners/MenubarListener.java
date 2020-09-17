@@ -17,10 +17,14 @@ public class MenubarListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Automaton a;
+		String input;
 
 		switch (MenubarCommands.valueOf(e.getActionCommand())) {
 		case GENRT_AUTOM:
-			JOptionPane.showInputDialog(null, "Introduzca la expresión regular");
+			input=JOptionPane.showInputDialog(null, "Introduzca la expresión regular");
+			
+			if(input != null)
+				MoveListerner.getInstance().getCanvas().setAutomaton(RegularExpression.toAutomaton(input));
 			break;
 		case GENRT_REGEX:
 			a = MoveListerner.getInstance().getCanvas().getAutomaton();

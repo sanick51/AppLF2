@@ -2,6 +2,7 @@ package lf2.flap.views;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 
 public interface ViewConstants {
 	public static final String appName = "FLAP LF";
@@ -13,4 +14,6 @@ public interface ViewConstants {
 	public static final Color stateColor= Color.YELLOW;
 	public static final Color selectedStateColor= Color.CYAN;
 	
+	public static final Font emptyFont = new Font("Serif", Font.BOLD, 16);
+	public static final String emptySymbol ="λ";
 }

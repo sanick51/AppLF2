@@ -59,6 +59,14 @@ public class StateFigure extends State implements Drawer {
 	public void setY(int y) {
 		this.y = y;
 	}
+	
+	public int getX() {
+		return (int) x;
+	}
+	
+	public int getY() {
+		return (int) y;
+	}
 
 	public boolean isMouseOver(Point p) {
 		return Math.hypot(Math.abs(p.x - this.x), Math.abs(p.y - this.y)) <= RADIUS;

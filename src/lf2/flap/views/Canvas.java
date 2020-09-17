@@ -2,6 +2,7 @@ package lf2.flap.views;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
@@ -35,7 +36,7 @@ public class Canvas extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		
+
 		if (mousePoint != null && statePoint != null)
 			g.drawLine(mousePoint.x, mousePoint.y, statePoint.x, statePoint.y);
 
@@ -43,7 +44,6 @@ public class Canvas extends JPanel {
 			((StateFigure) s).draw(g);
 		}
 
-		
 	}
 
 	public void createNode(Point p) {
@@ -51,7 +51,8 @@ public class Canvas extends JPanel {
 		figure.setX(p.x);
 		figure.setY(p.y);
 		figure.setLabel("q" + stateCounter++);
-		this.automaton.addState(figure);;
+		this.automaton.addState(figure);
+		;
 	}
 
 	public void createNode(int x, int y) {
@@ -61,9 +62,23 @@ public class Canvas extends JPanel {
 	public Automaton getAutomaton() {
 		return automaton;
 	}
-	
+
 	public void setAutomaton(Automaton automaton) {
 		this.automaton = automaton;
+		StateFigure aux = (StateFigure) this.automaton.getInitialState();
+		Point lastPoint = new Point(70, 70);
+
+		aux.setPosition(lastPoint);
+
+		for (State s : this.automaton.getStates()) {
+			aux = (StateFigure) s;
+			Random rnd = new Random();
+			aux.setX(rnd.nextInt(300) + lastPoint.x / 3);
+			aux.setY(rnd.nextInt(300) + lastPoint.y / 3);
+			lastPoint.x = aux.getX();
+			lastPoint.y = aux.getY();
+		}
+
 		this.repaint();
 	}
 
