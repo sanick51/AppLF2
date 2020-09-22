@@ -3,11 +3,13 @@ package lf2.flap.models.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import lf2.flap.views.figures.StateFigure;
-import lf2.flap.views.figures.TransitionFigure;
-
 public interface RegularExpression {
 
+	/**
+	 * Reduce el automata aut a su minimo y se extrae la regex resultante.
+	 * @param aut Automata
+	 * @return regex
+	 */
 	public static String getRegex(Automaton aut) {
 		String ret = "";
 		Automaton a = reduceFull(aut);
@@ -33,6 +35,11 @@ public interface RegularExpression {
 		return ret;
 	}
 
+	/**
+	 * Reduce un automata a su equivalente minimo
+	 * @param aut Automata
+	 * @return Automata minimizado
+	 */
 	public static Automaton reduceFull(Automaton aut) {
 		Automaton red = reduce(aut);
 
@@ -42,17 +49,22 @@ public interface RegularExpression {
 		return red;
 	}
 
+	/**
+	 * Reduce un automata a una version simplificada. Requiere varios usos para minimizarlo al máximo
+	 * @param aut Automata
+	 * @return automata simplificado
+	 */
 	public static Automaton reduce(Automaton aut) {
 		Automaton red = cloneAutomaton(aut);
-		
+
 		if (red.finalStatesCount() != 1 || red.getStates().size() == 1) {
-			State finalState = new StateFigure(aut, "Final");
+			State finalState = new State(aut, "Final");
 			finalState.setFinal(true);
 
 			for (State s : red.getStates()) {
 				if (s.isFinal) {
 					s.setFinal(false);
-					red.addTransition(new TransitionFigure("", s, finalState));
+					red.addTransition(new Transition("", s, finalState));
 				}
 			}
 
@@ -81,6 +93,11 @@ public interface RegularExpression {
 		return red;
 	}
 
+	/**
+	 * Minimiza estructuras de nodos en cadena
+	 * @param aux Estado a eliminar
+	 * @param a Automata del estado
+	 */
 	public static void minimize(State aux, Automaton a) {
 		List<Transition> transitions = new ArrayList<>();
 		String loopS;
@@ -96,7 +113,7 @@ public interface RegularExpression {
 					loopS = aux.selfTransitions.get(0).value + "*";
 				}
 
-				a.addTransition(new TransitionFigure(ti.value + loopS + to.value, ti.startState, to.endState));
+				a.addTransition(new Transition(ti.value + loopS + to.value, ti.startState, to.endState));
 				transitions.add(ti);
 				transitions.add(to);
 			}
@@ -107,6 +124,13 @@ public interface RegularExpression {
 		}
 	}
 
+	/**
+	 * Busca una transicion que coincida con los estados de entrada.
+	 * @param s Estado inicial
+	 * @param f Estado final
+	 * @param a Automata de los estaods
+	 * @return Transicion correspondiente, si no la encuentra, null
+	 */
 	public static Transition searchTransition(State s, State f, Automaton a) {
 		List<Transition> transitions = a.getTransitions();
 
@@ -118,6 +142,11 @@ public interface RegularExpression {
 		return null;
 	}
 
+	/**
+	 * Une transiciones entre dos nodos que van en la misma direccion.
+	 * @param s Estado inicial
+	 * @param f Estado final
+	 */
 	public static void mergeTransitions(State s, State f) {
 		boolean isAppear = false;
 		List<Transition> ts = new ArrayList<>();
@@ -140,6 +169,11 @@ public interface RegularExpression {
 		}
 	}
 
+	/**
+	 * Copia un automata 
+	 * @param aut Automata a copiar
+	 * @return Automata duplicado
+	 */
 	public static Automaton cloneAutomaton(Automaton aut) {
 		Automaton red = new Automaton();
 		State s;
@@ -148,16 +182,22 @@ public interface RegularExpression {
 		for (Transition t : aut.getTransitions()) {
 			if (!t.isRecursive()) {
 				ss = searchStates(t.startState, t.endState, red);
-				red.addTransition(new TransitionFigure(t.value, ss[0], ss[1]));
+				red.addTransition(new Transition(t.value, ss[0], ss[1]));
 			} else {
 				s = searchState(t.startState, red);
-				red.addTransition(new TransitionFigure(t.value, s));
+				red.addTransition(new Transition(t.value, s));
 			}
 		}
 
 		return red;
 	}
 
+	/**
+	 * Busca el estado equivalente en el automata red, si no lo  enuentra, lo crea y agrega
+	 * @param state Estado a evaluar
+	 * @param red Automata
+	 * @return Estado equivalente
+	 */
 	public static State searchState(State state, Automaton red) {
 		State aux = null;
 
@@ -167,7 +207,7 @@ public interface RegularExpression {
 		}
 
 		if (aux == null) {
-			aux = new StateFigure(red, state.label);
+			aux = new State(red, state.label);
 			aux.isFinal = state.isFinal;
 			aux.setInit(state.isInit);
 			red.addState(aux);
@@ -176,6 +216,13 @@ public interface RegularExpression {
 		return aux;
 	}
 
+	/**
+	 * Busca los estados equivalentes en el automata red, si no los  enuentra, los crea y agrega
+	 * @param stateS Estado inical a evaluar
+	 * @param stateF Estado final a evaluar
+	 * @param red Automata
+	 * @return Estados equivalentes
+	 */
 	public static State[] searchStates(State stateS, State stateF, Automaton red) {
 		State[] aux = new State[2];
 
@@ -188,14 +235,14 @@ public interface RegularExpression {
 		}
 
 		if (aux[0] == null) {
-			aux[0] = new StateFigure(red, stateS.label);
+			aux[0] = new State(red, stateS.label);
 			aux[0].isFinal = stateS.isFinal;
 			aux[0].setInit(stateS.isInit);
 			red.addState(aux[0]);
 		}
 
 		if (aux[1] == null) {
-			aux[1] = new StateFigure(red, stateF.label);
+			aux[1] = new State(red, stateF.label);
 			aux[1].isFinal = stateF.isFinal;
 			aux[1].setInit(stateF.isInit);
 			red.addState(aux[1]);
@@ -204,6 +251,11 @@ public interface RegularExpression {
 		return aux;
 	}
 
+	/**
+	 * Convierte una cadena Regex a Automata
+	 * @param regex Cadena
+	 * @return Automata
+	 */
 	public static Automaton toAutomaton(String regex) {
 		Automaton a = new Automaton();
 		List<State> aux = new ArrayList<State>();
@@ -217,18 +269,23 @@ public interface RegularExpression {
 		for (int i = 0; i < regex.length(); i++) { // Recorre la regex
 			if (regex.charAt(i) == '*') { // Verifica si es bucle
 				if (regex.charAt(i - 1) == ')') { // Verifica si en la anterior posición hay un )
-					a.addTransition(new TransitionFigure("x",
-							a.getTransitions().get(a.getTransitions().size() - 1).getEndState(), // Coge el último
+					a.addTransition(
+							new Transition("x", a.getTransitions().get(a.getTransitions().size() - 1).getEndState(), // Coge
+																														// el
+																														// último
+																														// estado
+									a.getTransitions().get(searchPositionParenthesis2(regex, i) - // Busca la transición
+																									// después
+																									// del ( y coge el
 																									// estado
-							a.getTransitions().get(searchPositionParenthesis2(regex, i) - // Busca la transición después
-																							// del ( y coge el estado
-									countSymbols(regex, searchPositionParenthesis2(regex, i))).getStartState())); // de
-																													// inicial
+											countSymbols(regex, searchPositionParenthesis2(regex, i)))
+											.getStartState())); // de
+																// inicial
 				} else { // Si no hay un ) antes, crea un bucle normal
-					a.addTransition(new TransitionFigure(regex.substring(i - 1, i), aux.get(aux.size() - 1)));
+					a.addTransition(new Transition(regex.substring(i - 1, i), aux.get(aux.size() - 1)));
 				}
 			} else if (regex.charAt(i) == '+') { // Si hay un +
-				State s1 = new StateFigure(a, value + count);
+				State s1 = new State(a, value + count);
 				count++;
 				a.addState(s1);
 				aux.add(s1);
@@ -242,7 +299,7 @@ public interface RegularExpression {
 					if (y <= 0)
 						break;
 				}
-				a.addTransition(new TransitionFigure(regex.substring(i + 1, i + 2),
+				a.addTransition(new Transition(regex.substring(i + 1, i + 2),
 						a.getTransitions().get(a.getTransitions().size() - c).getStartState(), s1));
 				// Crea las transiciones antes del más
 				int x = i + 2;
@@ -250,64 +307,61 @@ public interface RegularExpression {
 				if (x < regex.length())
 					while (!isSymbol(regex.charAt(x))) { // Crea las concatenaciones depués del más hasta que haya un
 															// bucle o ()
-						State s3 = new StateFigure(a, value + count);
+						State s3 = new State(a, value + count);
 						count++;
-						a.addTransition(new TransitionFigure(regex.substring(x, x + 1), aux.get(aux.size() - 1), s3));
+						a.addTransition(new Transition(regex.substring(x, x + 1), aux.get(aux.size() - 1), s3));
 						a.addState(s3);
 						aux.add(s3);
 						x++;
 						if (x >= regex.length()) // Sale porque sí :p
 							break;
 					}
-				State s2 = new StateFigure(a, value + count); // estado para las transiones vacías
+				State s2 = new State(a, value + count); // estado para las transiones vacías
 				count++;
 				a.addState(s2);
-				a.addTransition(new TransitionFigure("", aux.get(aux.size() - 1), s2));
+				a.addTransition(new Transition("", aux.get(aux.size() - 1), s2));
 				aux.add(s2);
-				a.addTransition(new TransitionFigure("", saux, s2));
+				a.addTransition(new Transition("", saux, s2));
 				i = x;
 			} else { // Si no es un + o *
 				if (regex.charAt(i) != '(' && regex.charAt(i) != ')') { // Si tampoco es un ( y )
 					if (aux.isEmpty()) { // Si es la primera concatenacion
-						State s1 = new StateFigure(a, value + count);
+						State s1 = new State(a, value + count);
 						s1.setInit(true);
 						count++;
 						a.addState(s1);
 						aux.add(s1);
 						if (i + 1 < regex.length()) {
 							if (regex.charAt(i + 1) != '*') { // Si en la siguiente posición no hay un bucle
-								State s2 = new StateFigure(a, value + count);
+								State s2 = new State(a, value + count);
 								count++;
 								a.addState(s2);
 								aux.add(s2);
-								a.addTransition(new TransitionFigure(regex.substring(i, i + 1), s1, s2));
+								a.addTransition(new Transition(regex.substring(i, i + 1), s1, s2));
 							} else { // Si en la siguiente posición hay un bucle
-								a.addTransition(
-										new TransitionFigure(regex.substring(i, i + 1), aux.get(aux.size() - 1)));
+								a.addTransition(new Transition(regex.substring(i, i + 1), aux.get(aux.size() - 1)));
 							}
 						} else {
-							State s2 = new StateFigure(a, value + count);
+							State s2 = new State(a, value + count);
 							count++;
 							a.addState(s2);
 							aux.add(s2);
-							a.addTransition(new TransitionFigure(regex.substring(i, i + 1), s1, s2));
+							a.addTransition(new Transition(regex.substring(i, i + 1), s1, s2));
 						}
 					} else { // si la posición es un ( o )
 						if ((i + 1) < regex.length()) { // Si no es el último elemento
 							if (regex.charAt(i + 1) != '*') {// si la siguiente posición no es bucle
-								State s3 = new StateFigure(a, value + count);
+								State s3 = new State(a, value + count);
 								count++;
 								a.addState(s3);
-								a.addTransition(
-										new TransitionFigure(regex.substring(i, i + 1), aux.get(aux.size() - 1), s3));
+								a.addTransition(new Transition(regex.substring(i, i + 1), aux.get(aux.size() - 1), s3));
 								aux.add(s3);
 							}
 						} else { // Si es el último elemento
-							State s3 = new StateFigure(a, value + count);
+							State s3 = new State(a, value + count);
 							count++;
 							a.addState(s3);
-							a.addTransition(
-									new TransitionFigure(regex.substring(i, i + 1), aux.get(aux.size() - 1), s3));
+							a.addTransition(new Transition(regex.substring(i, i + 1), aux.get(aux.size() - 1), s3));
 							aux.add(s3);
 						}
 					}
@@ -351,6 +405,11 @@ public interface RegularExpression {
 		return count;
 	}
 
+	/**
+	 * Evalua si c es un simbolo de regex
+	 * @param c simbolo
+	 * @return true si coincide
+	 */
 	public static boolean isSymbol(char c) {
 		return (c == '(' || c == ')' || c == '*' || c == '+');
 	}
