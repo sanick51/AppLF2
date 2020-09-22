@@ -1,4 +1,4 @@
-package lf2.flap.views.listeners;
+package lf2.flap.views.regex.listeners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,11 +8,12 @@ import javax.swing.JOptionPane;
 import lf2.flap.models.entity.Automaton;
 import lf2.flap.models.entity.RegularExpression;
 import lf2.flap.views.Grapher;
+import lf2.flap.views.listeners.MoveListerner;
 
-public class MenubarListener implements ActionListener {
-	private static MenubarListener menubarListener = null;
+public class RegexMenubarListener implements ActionListener {
+	private static RegexMenubarListener menubarListener = null;
 
-	private MenubarListener() {
+	private RegexMenubarListener() {
 	}
 
 	@Override
@@ -20,7 +21,7 @@ public class MenubarListener implements ActionListener {
 		Automaton a;
 		String input;
 
-		switch (MenubarCommands.valueOf(e.getActionCommand())) {
+		switch (RegexMenubarCommands.valueOf(e.getActionCommand())) {
 		case GENRT_AUTOM:
 			input=JOptionPane.showInputDialog(null, "Introduzca la expresión regular");
 			
@@ -51,9 +52,9 @@ public class MenubarListener implements ActionListener {
 		}
 	}
 
-	public static MenubarListener getInstance() {
+	public static RegexMenubarListener getInstance() {
 		if (menubarListener == null)
-			menubarListener = new MenubarListener();
+			menubarListener = new RegexMenubarListener();
 
 		return menubarListener;
 	}
