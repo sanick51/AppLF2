@@ -16,4 +16,8 @@ public interface ViewConstants {
 	
 	public static final Font emptyFont = new Font("Serif", Font.BOLD, 16);
 	public static final String emptySymbol ="λ";
+	
+	public static final Font mainButtonsFont = new Font("Tahoma", 0, 20);
+	public static final Color mainButtonsBackground= new Color(0, 166, 255);
+	
 }
