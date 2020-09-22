@@ -9,11 +9,13 @@ public class State {
 	protected Automaton automaton;
 	protected List<Transition> inTransitions;
 	protected List<Transition> outTransitions;
+	protected List<Transition> selfTransitions;
 
 	public State(Automaton automaton) {
 		this.automaton = automaton;
 		this.inTransitions = new ArrayList<Transition>();
 		this.outTransitions = new ArrayList<Transition>();
+		this.selfTransitions = new ArrayList<Transition>();
 	}
 
 	public State(Automaton automaton, String label) {
@@ -21,6 +23,7 @@ public class State {
 		this.automaton = automaton;
 		this.inTransitions = new ArrayList<Transition>();
 		this.outTransitions = new ArrayList<Transition>();
+		this.selfTransitions = new ArrayList<Transition>();
 	}
 
 	public List<Transition> getInTransitions() {
@@ -29,6 +32,10 @@ public class State {
 
 	public List<Transition> getOutTransitions() {
 		return outTransitions;
+	}
+	
+	public List<Transition> getSelfTransitions() {
+		return selfTransitions;
 	}
 
 	public String getLabel() {
@@ -63,5 +70,9 @@ public class State {
 
 	public boolean isFinal() {
 		return isFinal;
+	}
+	
+	public Automaton getAutomaton() {
+		return automaton;
 	}
 }

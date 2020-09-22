@@ -5,7 +5,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import lf2.flap.views.Canvas;
-import lf2.flap.views.StateFigure;
+import lf2.flap.views.figures.StateFigure;
 
 public class MoveListerner implements MouseListener, MouseMotionListener {
 	private static MoveListerner ml = null;
@@ -132,5 +132,9 @@ public class MoveListerner implements MouseListener, MouseMotionListener {
 			ml = new MoveListerner();
 
 		return ml;
+	}
+	
+	public Canvas getCanvas() {
+		return canvas;
 	}
 }
