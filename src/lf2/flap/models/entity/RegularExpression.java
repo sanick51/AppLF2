@@ -3,6 +3,13 @@ package lf2.flap.models.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * RegularExpression - Interfaz encargada de realizar las acciones de convertir un
+ * autómata a expresión regular y viceversa.
+ * @author Felipe Chaparro - Yohan Caro - Fabian Cristancho
+ *	
+ * 22 sep. 2020
+ */
 public interface RegularExpression {
 
 	/**
@@ -288,34 +295,27 @@ public interface RegularExpression {
 			return null;
 		}
 
-		for (int i = 0; i < regex.length(); i++) { // Recorre la regex
-			if (regex.charAt(i) == '*') { // Verifica si es bucle
-				if (regex.charAt(i - 1) == ')') { // Verifica si en la anterior posición hay un )
+		for (int i = 0; i < regex.length(); i++) { 
+			if (regex.charAt(i) == '*') {
+				if (regex.charAt(i - 1) == ')') { 
 					a.addTransition(
-							new Transition("x", a.getTransitions().get(a.getTransitions().size() - 1).getEndState(), // Coge
-																														// el
-																														// último
-																														// estado
-									a.getTransitions().get(searchPositionParenthesis2(regex, i) - // Busca la transición
-																									// después
-																									// del ( y coge el
-																									// estado
-											countSymbols(regex, searchPositionParenthesis2(regex, i)))
-											.getStartState())); // de
-																// inicial
-				} else { // Si no hay un ) antes, crea un bucle normal
+							new Transition("x", a.getTransitions().get(a.getTransitions().size() - 1).getEndState(),
+									a.getTransitions().get(searchPositionParenthesis(regex, i) - 
+											countSymbols(regex, searchPositionParenthesis(regex, i)))
+											.getStartState())); 
+				} else {
 					a.addTransition(new Transition(regex.substring(i - 1, i), aux.get(aux.size() - 1)));
 				}
-			} else if (regex.charAt(i) == '+') { // Si hay un +
+			} else if (regex.charAt(i) == '+') { 
 				State s1 = new State(a, value + count);
 				count++;
 				a.addState(s1);
 				aux.add(s1);
-				State saux = a.getTransitions().get(a.getTransitions().size() - 1).getEndState(); // Crea un estado y lo
-																									// une
+				State saux = a.getTransitions().get(a.getTransitions().size() - 1).getEndState(); 
+																									
 				int y = i - 1;
 				int c = 0;
-				while (!isSymbol(regex.charAt(y))) { // Cuenta las concatenaciones antes del +
+				while (!isSymbol(regex.charAt(y))) { 
 					c++;
 					y--;
 					if (y <= 0)
@@ -323,44 +323,42 @@ public interface RegularExpression {
 				}
 				a.addTransition(new Transition(regex.substring(i + 1, i + 2),
 						a.getTransitions().get(a.getTransitions().size() - c).getStartState(), s1));
-				// Crea las transiciones antes del más
 				int x = i + 2;
 
 				if (x < regex.length())
-					while (!isSymbol(regex.charAt(x))) { // Crea las concatenaciones depués del más hasta que haya un
-															// bucle o ()
+					while (!isSymbol(regex.charAt(x))) { 
 						State s3 = new State(a, value + count);
 						count++;
 						a.addTransition(new Transition(regex.substring(x, x + 1), aux.get(aux.size() - 1), s3));
 						a.addState(s3);
 						aux.add(s3);
 						x++;
-						if (x >= regex.length()) // Sale porque sí :p
+						if (x >= regex.length())
 							break;
 					}
-				State s2 = new State(a, value + count); // estado para las transiones vacías
+				State s2 = new State(a, value + count); 
 				count++;
 				a.addState(s2);
 				a.addTransition(new Transition("", aux.get(aux.size() - 1), s2));
 				aux.add(s2);
 				a.addTransition(new Transition("", saux, s2));
 				i = x;
-			} else { // Si no es un + o *
-				if (regex.charAt(i) != '(' && regex.charAt(i) != ')') { // Si tampoco es un ( y )
-					if (aux.isEmpty()) { // Si es la primera concatenacion
+			} else { 
+				if (regex.charAt(i) != '(' && regex.charAt(i) != ')') { 
+					if (aux.isEmpty()) { 
 						State s1 = new State(a, value + count);
 						s1.setInit(true);
 						count++;
 						a.addState(s1);
 						aux.add(s1);
 						if (i + 1 < regex.length()) {
-							if (regex.charAt(i + 1) != '*') { // Si en la siguiente posición no hay un bucle
+							if (regex.charAt(i + 1) != '*') { 
 								State s2 = new State(a, value + count);
 								count++;
 								a.addState(s2);
 								aux.add(s2);
 								a.addTransition(new Transition(regex.substring(i, i + 1), s1, s2));
-							} else { // Si en la siguiente posición hay un bucle
+							} else { 
 								a.addTransition(new Transition(regex.substring(i, i + 1), aux.get(aux.size() - 1)));
 							}
 						} else {
@@ -370,16 +368,16 @@ public interface RegularExpression {
 							aux.add(s2);
 							a.addTransition(new Transition(regex.substring(i, i + 1), s1, s2));
 						}
-					} else { // si la posición es un ( o )
-						if ((i + 1) < regex.length()) { // Si no es el último elemento
-							if (regex.charAt(i + 1) != '*') {// si la siguiente posición no es bucle
+					} else { 
+						if ((i + 1) < regex.length()) { 
+							if (regex.charAt(i + 1) != '*') {
 								State s3 = new State(a, value + count);
 								count++;
 								a.addState(s3);
 								a.addTransition(new Transition(regex.substring(i, i + 1), aux.get(aux.size() - 1), s3));
 								aux.add(s3);
 							}
-						} else { // Si es el último elemento
+						} else { 
 							State s3 = new State(a, value + count);
 							count++;
 							a.addState(s3);
@@ -395,7 +393,13 @@ public interface RegularExpression {
 		return a;
 	}
 
-	public static int searchPositionParenthesis2(String regex, int pos) {
+	/**
+	 * Busca el siguiente elemento después del parentesis de apertura desde una posición
+	 * @param regex expresion
+	 * @param pos posición para empezar
+	 * @return j + 1 
+	 */
+	public static int searchPositionParenthesis(String regex, int pos) {
 		int j = pos - 2;
 		int cont = 0;
 
@@ -411,12 +415,13 @@ public interface RegularExpression {
 		return j + 1;
 	}
 
-	/*
-	 * Encontrar la posición del parentesis de apertura Contar la cantidad de
-	 * simbolos antes de la posición del parentesis de apetura Restar la posición
-	 * del parentesis con la cantidad de simbolos que han pasado (Complete)
+	/**
+	 * Cuanta la cantidad de simbolos y operaciones en un cadena desde una posición 
+	 * determinada
+	 * @param regex expresion
+	 * @param pos posición a empezar
+	 * @return count contador
 	 */
-
 	public static int countSymbols(String regex, int pos) {
 		int count = 0;
 		for (int i = (pos - 1); i >= 0; i--) {
