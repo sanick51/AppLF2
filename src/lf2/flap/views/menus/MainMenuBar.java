@@ -12,6 +12,15 @@ public class MainMenuBar extends JMenuBar {
 	}
 
 	private void init() {
+		
+		this.add(MenuUtilities.makeMenu("App", 
+				MenuUtilities.makeMenuItems(MenubarListener.getInstance(), 
+						new String[] { 
+								"Reiniciar canvas" 
+						}, new MenubarCommands[] { 
+								MenubarCommands.RESET_CANVAS
+						})));
+		
 		this.add(MenuUtilities.makeMenu("Regex", 
 				MenuUtilities.makeMenuItems(MenubarListener.getInstance(), 
 						new String[] { 
@@ -21,6 +30,7 @@ public class MainMenuBar extends JMenuBar {
 								MenubarCommands.GENRT_REGEX, 
 								MenubarCommands.GENRT_AUTOM 
 						})));
+		
 		
 		this.add(MenuUtilities.makeMenu("Ayuda", 
 				MenuUtilities.makeMenuItems(MenubarListener.getInstance(), 

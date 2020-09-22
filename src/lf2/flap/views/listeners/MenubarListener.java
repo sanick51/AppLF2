@@ -40,6 +40,10 @@ public class MenubarListener implements ActionListener {
 			if (a.getInitialState() != null)
 				MoveListerner.getInstance().getCanvas().setAutomaton(Grapher.toGraph(RegularExpression.reduce(a)));
 			break;
+			
+		case RESET_CANVAS:
+			MoveListerner.getInstance().getCanvas().resetAutomaton();
+			break;
 
 		default:
 			System.out.println("El comando " + e.getActionCommand() + " no tiene función.");

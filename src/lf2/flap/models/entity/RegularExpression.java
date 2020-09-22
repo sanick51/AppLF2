@@ -7,6 +7,7 @@ public interface RegularExpression {
 
 	/**
 	 * Reduce el automata aut a su minimo y se extrae la regex resultante.
+	 * 
 	 * @param aut Automata
 	 * @return regex
 	 */
@@ -37,6 +38,7 @@ public interface RegularExpression {
 
 	/**
 	 * Reduce un automata a su equivalente minimo
+	 * 
 	 * @param aut Automata
 	 * @return Automata minimizado
 	 */
@@ -46,11 +48,13 @@ public interface RegularExpression {
 		while (red.getStates().size() > 2)
 			red = reduce(red);
 
-		return red;
+		return reduce(red);
 	}
 
 	/**
-	 * Reduce un automata a una version simplificada. Requiere varios usos para minimizarlo al máximo
+	 * Reduce un automata a una version simplificada. Requiere varios usos para
+	 * minimizarlo al máximo
+	 * 
 	 * @param aut Automata
 	 * @return automata simplificado
 	 */
@@ -95,8 +99,9 @@ public interface RegularExpression {
 
 	/**
 	 * Minimiza estructuras de nodos en cadena
+	 * 
 	 * @param aux Estado a eliminar
-	 * @param a Automata del estado
+	 * @param a   Automata del estado
 	 */
 	public static void minimize(State aux, Automaton a) {
 		List<Transition> transitions = new ArrayList<>();
@@ -126,6 +131,7 @@ public interface RegularExpression {
 
 	/**
 	 * Busca una transicion que coincida con los estados de entrada.
+	 * 
 	 * @param s Estado inicial
 	 * @param f Estado final
 	 * @param a Automata de los estaods
@@ -144,6 +150,7 @@ public interface RegularExpression {
 
 	/**
 	 * Une transiciones entre dos nodos que van en la misma direccion.
+	 * 
 	 * @param s Estado inicial
 	 * @param f Estado final
 	 */
@@ -151,18 +158,27 @@ public interface RegularExpression {
 		boolean isAppear = false;
 		List<Transition> ts = new ArrayList<>();
 		Transition aux = null;
-
-		for (Transition t : s.outTransitions) {
-			if (t.endState == f) {
-				if (!isAppear) {
-					isAppear = true;
+		if (s == f)
+			for (Transition t : s.selfTransitions) {
+				if(aux == null) {
 					aux = t;
 				} else {
 					aux.value += (t.value != null ? (t.value == "" ? "" : "+") + t.value : "");
 					ts.add(t);
 				}
 			}
-		}
+		else
+			for (Transition t : s.outTransitions) {
+				if (t.endState == f) {
+					if (!isAppear) {
+						isAppear = true;
+						aux = t;
+					} else {
+						aux.value += (t.value != null ? (t.value == "" ? "" : "+") + t.value : "");
+						ts.add(t);
+					}
+				}
+			}
 
 		for (Transition t : ts) {
 			f.automaton.removeTransition(t);
@@ -170,7 +186,8 @@ public interface RegularExpression {
 	}
 
 	/**
-	 * Copia un automata 
+	 * Copia un automata
+	 * 
 	 * @param aut Automata a copiar
 	 * @return Automata duplicado
 	 */
@@ -193,9 +210,11 @@ public interface RegularExpression {
 	}
 
 	/**
-	 * Busca el estado equivalente en el automata red, si no lo  enuentra, lo crea y agrega
+	 * Busca el estado equivalente en el automata red, si no lo enuentra, lo crea y
+	 * agrega
+	 * 
 	 * @param state Estado a evaluar
-	 * @param red Automata
+	 * @param red   Automata
 	 * @return Estado equivalente
 	 */
 	public static State searchState(State state, Automaton red) {
@@ -217,10 +236,12 @@ public interface RegularExpression {
 	}
 
 	/**
-	 * Busca los estados equivalentes en el automata red, si no los  enuentra, los crea y agrega
+	 * Busca los estados equivalentes en el automata red, si no los enuentra, los
+	 * crea y agrega
+	 * 
 	 * @param stateS Estado inical a evaluar
 	 * @param stateF Estado final a evaluar
-	 * @param red Automata
+	 * @param red    Automata
 	 * @return Estados equivalentes
 	 */
 	public static State[] searchStates(State stateS, State stateF, Automaton red) {
@@ -253,6 +274,7 @@ public interface RegularExpression {
 
 	/**
 	 * Convierte una cadena Regex a Automata
+	 * 
 	 * @param regex Cadena
 	 * @return Automata
 	 */
@@ -407,6 +429,7 @@ public interface RegularExpression {
 
 	/**
 	 * Evalua si c es un simbolo de regex
+	 * 
 	 * @param c simbolo
 	 * @return true si coincide
 	 */

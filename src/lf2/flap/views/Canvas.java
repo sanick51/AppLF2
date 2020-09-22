@@ -106,4 +106,10 @@ public class Canvas extends JPanel {
 	public PopupInputMenu getPopupInputMenu() {
 		return popupInputMenu;
 	}
+	
+	public void resetAutomaton() {
+		this.automaton = new Automaton();
+		this.stateCounter=0;
+		this.repaint();
+	}
 }
