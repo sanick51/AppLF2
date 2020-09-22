@@ -3,6 +3,8 @@ package lf2.flap.views.figures;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
 
 import lf2.flap.models.entity.Automaton;
 import lf2.flap.models.entity.State;
@@ -11,7 +13,7 @@ import lf2.flap.views.ViewConstants;
 
 public class StateFigure extends State implements Drawer {
 	protected float x, y;
-	private boolean isSelected = false;;
+	private boolean isSelected = false;
 
 	public StateFigure(Automaton automaton) {
 		super(automaton);
@@ -24,12 +26,32 @@ public class StateFigure extends State implements Drawer {
 	}
 
 	public void draw(Graphics g) {
+		Map<StateFigure, Integer> s = new HashMap<StateFigure, Integer>();
+		TransitionFigure tf;
+		StateFigure sf;
+		int aux;
+
 		for (Transition t : outTransitions) {
-			((TransitionFigure) t).draw(g);
+			tf = ((TransitionFigure) t);
+			sf = (StateFigure)t.getEndState();
+
+			if (s.containsKey(t.getEndState())) {
+				aux = s.get(sf);
+				tf.labelHeight = aux;
+				s.put(sf, aux + 1);
+			} else
+				s.put(sf, 1);
+
+			tf.draw(g);
 		}
 
+		aux = 0;
+		
 		for (Transition t : selfTransitions) {
-			((TransitionFigure) t).draw(g);
+			tf = ((TransitionFigure) t);
+			tf.labelHeight = aux;
+			tf.draw(g);
+			aux++;
 		}
 
 		g.setColor(ViewConstants.stateColor);
@@ -59,11 +81,11 @@ public class StateFigure extends State implements Drawer {
 	public void setY(int y) {
 		this.y = y;
 	}
-	
+
 	public int getX() {
 		return (int) x;
 	}
-	
+
 	public int getY() {
 		return (int) y;
 	}

@@ -75,4 +75,13 @@ public class State {
 	public Automaton getAutomaton() {
 		return automaton;
 	}
+	
+	public boolean hasTransition(State s) {
+		for (Transition t : outTransitions) {
+			if(t.endState == s)
+				return true;
+		}
+		
+		return false;
+	}
 }
