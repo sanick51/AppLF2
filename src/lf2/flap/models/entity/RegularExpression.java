@@ -10,22 +10,24 @@ public interface RegularExpression {
 
 	public static String getRegex(Automaton aut) {
 		String ret = "";
-
 		Automaton a = reduceFull(aut);
 		State auxs = a.initialState;
 
 		if (auxs.selfTransitions.size() == 1) {
-			ret += auxs.selfTransitions.get(0).value + "*";
-		} else {
+			ret += "(" + auxs.selfTransitions.get(0).value + ")*";
 		}
 
-		ret += auxs.outTransitions.get(0).value;
+		if (auxs.outTransitions.get(0).value != "")
+			ret += "(" + auxs.outTransitions.get(0).value + ")";
 
 		auxs = auxs.outTransitions.get(0).endState;
 
 		if (auxs.selfTransitions.size() == 1) {
-			ret += auxs.selfTransitions.get(0).value + "*";
-		} else {
+			ret += "(" + auxs.selfTransitions.get(0).value + ")*";
+		}
+
+		if (auxs.outTransitions.size() == 1) {
+			ret = "(" + ret + auxs.outTransitions.get(0).value + ")*" + ret;
 		}
 
 		return ret;
@@ -41,163 +43,165 @@ public interface RegularExpression {
 	}
 
 	public static Automaton reduce(Automaton aut) {
-		Automaton red = new Automaton();
-		reduce(aut.initialState, red);
+		Automaton red = cloneAutomaton(aut);
+		
+		if (red.finalStatesCount() != 1 || red.getStates().size() == 1) {
+			State finalState = new StateFigure(aut, "Final");
+			finalState.setFinal(true);
 
-		if (red.getStates().size() > 0)
-			red.getStates().get(0).setInit(true);
+			for (State s : red.getStates()) {
+				if (s.isFinal) {
+					s.setFinal(false);
+					red.addTransition(new TransitionFigure("", s, finalState));
+				}
+			}
+
+			red.addState(finalState);
+		}
+
+		List<State> states = red.getStates(), remove = new ArrayList<>();
+
+		for (int i = 0; i < states.size(); i++) {
+			for (int j = 0; j < states.size(); j++) {
+				mergeTransitions(states.get(i), states.get(j));
+			}
+		}
+
+		for (State s : states) {
+			if (!s.isFinal && !s.isInit) {
+				minimize(s, red);
+				remove.add(s);
+			}
+		}
+
+		for (State s : remove) {
+			states.remove(s);
+		}
 
 		return red;
 	}
 
-	public static void reduce(State auxs, Automaton red) {
-		List<Transition> auxts = auxs.outTransitions;
-		List<Transition> to, ti, ts, tsb;
-		Transition t, prev = null, prev2 = null;
-		State[] ss;
-		String loopStr = "";
+	public static void minimize(State aux, Automaton a) {
+		List<Transition> transitions = new ArrayList<>();
+		String loopS;
 
-		for (int i = 0; i < auxts.size(); i++) {
-			t = auxts.get(i);
-			to = t.endState.outTransitions;
-			ti = t.endState.inTransitions;
-			ts = t.endState.selfTransitions;
-			loopStr = "";
+		for (Transition ti : aux.inTransitions) {
+			for (Transition to : aux.outTransitions) {
+				loopS = "";
 
-			if (to.size() == 1 && ti.size() == 1) {
-				ss = generateNewStates(auxs, to.get(0).endState, red);
+				if (aux.selfTransitions.size() == 1) {
+					if (aux.selfTransitions.get(0).value.contains("+"))
+						aux.selfTransitions.get(0).value = "(" + aux.selfTransitions.get(0).value + ")";
 
-				tsb = t.endState.selfTransitions;
-
-				if (tsb.size() == 1) {
-					loopStr = tsb.get(0).value + "*";
+					loopS = aux.selfTransitions.get(0).value + "*";
 				}
 
-				tsb = to.get(0).endState.selfTransitions;
+				a.addTransition(new TransitionFigure(ti.value + loopS + to.value, ti.startState, to.endState));
+				transitions.add(ti);
+				transitions.add(to);
+			}
+		}
 
-				if (tsb.size() == 1) {
-					red.addTransition(new TransitionFigure(tsb.get(0).value, ss[1]));
-				}
+		for (Transition t : transitions) {
+			a.removeTransition(t);
+		}
+	}
 
-				if (t.value.contains("+")) {
-					if (t.value.charAt(t.value.length() - 1) != ')' && t.value.charAt(0) != '(')
-						t.value = "(" + t.value + ")";
-				}
+	public static Transition searchTransition(State s, State f, Automaton a) {
+		List<Transition> transitions = a.getTransitions();
 
-				if (to.get(0).value.contains("+")) {
-					if (to.get(0).value.charAt(to.get(0).value.length() - 1) != ')' && to.get(0).value.charAt(0) != '(')
-						to.get(0).value = "(" + to.get(0).value + ")";
-				}
+		for (Transition t : transitions) {
+			if (t.startState == s && t.endState == f)
+				return t;
+		}
 
-				// o-o-o
-				red.addTransition(new TransitionFigure(t.value + loopStr + to.get(0).value, ss[0], ss[1]));
-				reduce(to.get(0).endState, red);
+		return null;
+	}
 
-			} else if (to.size() == 1 && ti.size() > 1) {
-				// o > o-o
-				ss = generateNewStates(auxs, t.endState, to.get(0).endState, red);
-				tsb = t.endState.selfTransitions;
+	public static void mergeTransitions(State s, State f) {
+		boolean isAppear = false;
+		List<Transition> ts = new ArrayList<>();
+		Transition aux = null;
 
-				if (tsb.size() == 1) {
-					// ó
-					red.addTransition(new TransitionFigure(tsb.get(0).value, ss[1]));
-				}
-
-				if (prev2 != null && prev2.startState == ss[0] && prev2.endState == ss[1]) {
-					prev2.value += "+" + t.value;
+		for (Transition t : s.outTransitions) {
+			if (t.endState == f) {
+				if (!isAppear) {
+					isAppear = true;
+					aux = t;
 				} else {
-					red.addTransition(new TransitionFigure(t.value, ss[0], ss[1]));
-					prev2 = prev = red.getTransitions().get(red.getTransitions().size() - 1);
-					red.addTransition(new TransitionFigure(to.get(0).value, ss[1], ss[2]));
-				}
-			} else if (to.size() > 1) {
-				// o-o < o
-				ss = generateNewStates(auxs, t.endState, red);
-
-				if (ts.size() == 1) {
-					loopStr = ts.get(0).value + "*";
-				} else if (ts.size() > 1) {
-
-				}
-
-				red.addTransition(new TransitionFigure(t.value + loopStr, ss[0], ss[1]));
-
-				reduce(t.endState, red);
-			} else {
-				ss = generateNewStates(auxs, t.endState, red);
-				ss[1].isFinal = true;
-				tsb = t.endState.selfTransitions;
-
-				if (tsb.size() == 1) {
-					// ó
-					red.addTransition(new TransitionFigure(tsb.get(0).value, ss[1]));
-				}
-
-				if (prev != null && prev.startState == ss[0] && prev.endState == ss[1]) {
-					prev.value += "+" + t.value;
-				} else {
-					// -o
-					red.addTransition(new TransitionFigure(t.value, ss[0], ss[1]));
-					prev = red.getTransitions().get(red.getTransitions().size() - 1);
+					aux.value += (t.value != null ? (t.value == "" ? "" : "+") + t.value : "");
+					ts.add(t);
 				}
 			}
 		}
+
+		for (Transition t : ts) {
+			f.automaton.removeTransition(t);
+		}
 	}
 
-	public static State[] generateNewStates(State auxs, State auxe, Automaton red) {
-		State[] ss = new State[2];
+	public static Automaton cloneAutomaton(Automaton aut) {
+		Automaton red = new Automaton();
+		State s;
+		State[] ss;
 
-		for (State s : red.getStates()) {
-			if (s.label.contentEquals(auxs.label))
-				ss[0] = s;
-
-			if (s.label.contentEquals(auxe.label))
-				ss[1] = s;
+		for (Transition t : aut.getTransitions()) {
+			if (!t.isRecursive()) {
+				ss = searchStates(t.startState, t.endState, red);
+				red.addTransition(new TransitionFigure(t.value, ss[0], ss[1]));
+			} else {
+				s = searchState(t.startState, red);
+				red.addTransition(new TransitionFigure(t.value, s));
+			}
 		}
 
-		if (ss[0] == null) {
-			ss[0] = new StateFigure(red, auxs.label);
-			red.addState(ss[0]);
-		}
-
-		if (ss[1] == null) {
-			ss[1] = new StateFigure(red, auxe.label);
-			red.addState(ss[1]);
-		}
-
-		return ss;
+		return red;
 	}
 
-	public static State[] generateNewStates(State auxs, State auxc, State auxe, Automaton red) {
-		State[] ss = new State[3];
+	public static State searchState(State state, Automaton red) {
+		State aux = null;
 
 		for (State s : red.getStates()) {
-			if (s.label.contentEquals(auxs.label))
-				ss[0] = s;
-
-			if (s.label.contentEquals(auxc.label))
-				ss[1] = s;
-
-			if (s.label.contentEquals(auxe.label))
-				ss[2] = s;
+			if (s.label.contentEquals(state.label))
+				aux = s;
 		}
 
-		if (ss[0] == null) {
-			ss[0] = new StateFigure(red, auxs.label);
-			red.addState(ss[0]);
+		if (aux == null) {
+			aux = new StateFigure(red, state.label);
+			aux.isFinal = state.isFinal;
+			aux.setInit(state.isInit);
+			red.addState(aux);
 		}
 
-		if (ss[1] == null) {
-			ss[1] = new StateFigure(red, auxc.label);
-			red.addState(ss[1]);
+		return aux;
+	}
+
+	public static State[] searchStates(State stateS, State stateF, Automaton red) {
+		State[] aux = new State[2];
+
+		for (State s : red.getStates()) {
+			if (s.label.contentEquals(stateS.label))
+				aux[0] = s;
+
+			if (s.label.contentEquals(stateF.label))
+				aux[1] = s;
 		}
 
-		if (ss[2] == null) {
-			ss[2] = new StateFigure(red, auxe.label);
-			red.addState(ss[2]);
+		if (aux[0] == null) {
+			aux[0] = new StateFigure(red, stateS.label);
+			aux[0].isFinal = stateS.isFinal;
+			aux[0].setInit(stateS.isInit);
+			red.addState(aux[0]);
 		}
 
-		return ss;
+		if (aux[1] == null) {
+			aux[1] = new StateFigure(red, stateF.label);
+			aux[1].isFinal = stateF.isFinal;
+			aux[1].setInit(stateF.isInit);
+			red.addState(aux[1]);
+		}
+
+		return aux;
 	}
 
 	public static Automaton toAutomaton(String regex) {

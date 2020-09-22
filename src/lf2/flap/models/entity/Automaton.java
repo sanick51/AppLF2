@@ -16,8 +16,8 @@ public class Automaton {
 	public void addState(State state) {
 		this.states.add(state);
 	}
-	
-	public void addTransition(Transition t){
+
+	public void addTransition(Transition t) {
 		boolean exists = false;
 		if (t.startState == t.endState) {
 			for (Transition tt : t.startState.selfTransitions) {
@@ -33,9 +33,17 @@ public class Automaton {
 			}
 		} else {
 			for (Transition tt : t.startState.outTransitions) {
-				if (tt.value.contentEquals(t.value) && tt.endState == t.endState) {
-					exists = true;
-					break;
+				if (t.value != null) {
+					if (tt.value.contentEquals(t.value) && tt.endState == t.endState) {
+						exists = true;
+						break;
+					}
+				} else {
+					if(tt.value == null) {
+						exists=true;
+						break;
+					}
+						
 				}
 			}
 
@@ -87,6 +95,13 @@ public class Automaton {
 
 	}
 
+	public void removeTransition(Transition t) {
+		this.transitions.remove(t);
+		t.startState.outTransitions.remove(t);
+		t.endState.inTransitions.remove(t);
+		t.startState.selfTransitions.remove(t);
+	}
+
 	public List<State> getStates() {
 		return states;
 	}
@@ -101,5 +116,15 @@ public class Automaton {
 
 	public State getInitialState() {
 		return initialState;
+	}
+	
+	public int finalStatesCount() {
+		int v= 0;
+		for (State s : states) {
+			if(s.isFinal)
+				v++;
+		}
+		
+		return v;
 	}
 }
