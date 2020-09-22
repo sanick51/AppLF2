@@ -1,8 +1,10 @@
-package lf2.flap.views.regex.listeners;
+package lf2.flap.views.regex;
 
 import javax.swing.JMenuBar;
 
 import lf2.flap.views.menus.MenuUtilities;
+import lf2.flap.views.regex.listeners.RegexMenubarCommands;
+import lf2.flap.views.regex.listeners.RegexMenubarListener;
 
 public class RegexMenuBar extends JMenuBar {
 

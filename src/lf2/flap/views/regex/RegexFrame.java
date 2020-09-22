@@ -7,7 +7,6 @@ import javax.swing.JFrame;
 import lf2.flap.views.Canvas;
 import lf2.flap.views.MainFrame;
 import lf2.flap.views.ViewConstants;
-import lf2.flap.views.regex.listeners.RegexMenuBar;
 
 
 public class RegexFrame extends JFrame {
