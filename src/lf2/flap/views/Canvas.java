@@ -110,6 +110,7 @@ public class Canvas extends JPanel {
 	public void resetAutomaton() {
 		this.automaton = new Automaton();
 		this.stateCounter=0;
+		this.canvasPopupMenu.getComponents()[0].setVisible(true);
 		this.repaint();
 	}
 }

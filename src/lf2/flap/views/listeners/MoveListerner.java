@@ -105,6 +105,7 @@ public class MoveListerner implements MouseListener, MouseMotionListener {
 			} else {
 				this.canvas.setLinePoints(e.getPoint(), draggedState.getPosition());
 			}
+			
 			canvas.repaint();
 		}
 	}
