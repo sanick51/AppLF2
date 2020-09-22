@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 
 import lf2.flap.models.entity.Automaton;
 import lf2.flap.models.entity.RegularExpression;
+import lf2.flap.views.Grapher;
 
 public class MenubarListener implements ActionListener {
 	private static MenubarListener menubarListener = null;
@@ -24,7 +25,7 @@ public class MenubarListener implements ActionListener {
 			input=JOptionPane.showInputDialog(null, "Introduzca la expresión regular");
 			
 			if(input != null)
-				MoveListerner.getInstance().getCanvas().setAutomaton(RegularExpression.toAutomaton(input));
+				MoveListerner.getInstance().getCanvas().setAutomaton(Grapher.toGraph(RegularExpression.toAutomaton(input)));
 			break;
 		case GENRT_REGEX:
 			a = MoveListerner.getInstance().getCanvas().getAutomaton();
@@ -37,7 +38,11 @@ public class MenubarListener implements ActionListener {
 			a = MoveListerner.getInstance().getCanvas().getAutomaton();
 
 			if (a.getInitialState() != null)
-				MoveListerner.getInstance().getCanvas().setAutomaton(RegularExpression.reduce(a));
+				MoveListerner.getInstance().getCanvas().setAutomaton(Grapher.toGraph(RegularExpression.reduce(a)));
+			break;
+			
+		case RESET_CANVAS:
+			MoveListerner.getInstance().getCanvas().resetAutomaton();
 			break;
 
 		default:
