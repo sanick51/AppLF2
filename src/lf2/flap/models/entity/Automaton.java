@@ -141,16 +141,21 @@ public class Automaton {
 	 */
 	public void removeState(State s) {
 		this.states.remove(s);
+		List<Transition> delete= new ArrayList<>();
 		
 		for(Transition t : s.outTransitions) {
-			this.removeTransition(t);
+			delete.add(t);
 		}
 		
 		for(Transition t : s.inTransitions) {
-			this.removeTransition(t);
+			delete.add(t);
 		}
 		
 		for(Transition t : s.selfTransitions) {
+			delete.add(t);
+		}
+		
+		for (Transition t : delete) {
 			this.removeTransition(t);
 		}
 	}
