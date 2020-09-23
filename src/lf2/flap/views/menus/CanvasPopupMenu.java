@@ -12,8 +12,8 @@ public class CanvasPopupMenu extends JPopupMenu {
 	}
 
 	private void init() {
-		MenuUtilities.makeMenu(this, MenuUtilities.makeMenuItems(CanvasMenuListener.getInstance(), new String[] { "Inicial", "Final" },
-				new CanvasMenuCommands[] { CanvasMenuCommands.TOGGLE_INIT, CanvasMenuCommands.TOGGLE_FINAL }));
+		MenuUtilities.makeMenu(this, MenuUtilities.makeMenuItems(CanvasMenuListener.getInstance(), new String[] { "Inicial", "Final" ,"Eliminar"},
+				new CanvasMenuCommands[] { CanvasMenuCommands.TOGGLE_INIT, CanvasMenuCommands.TOGGLE_FINAL, CanvasMenuCommands.DELETE }));
 	}
 
 }

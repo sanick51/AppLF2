@@ -17,9 +17,11 @@ public class RegexMenuBar extends JMenuBar {
 		this.add(MenuUtilities.makeMenu("App", 
 				MenuUtilities.makeMenuItems(RegexMenubarListener.getInstance(), 
 						new String[] { 
-								"Reiniciar canvas" 
+								"Reiniciar canvas",
+								"Pantalla principal"
 						}, new RegexMenubarCommands[] { 
-								RegexMenubarCommands.RESET_CANVAS
+								RegexMenubarCommands.RESET_CANVAS,
+								RegexMenubarCommands.RETURN_MAIN
 						})));
 		
 		this.add(MenuUtilities.makeMenu("Regex", 
