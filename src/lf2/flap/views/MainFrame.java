@@ -19,6 +19,8 @@ import lf2.flap.controllers.Controller;
 import lf2.flap.views.regex.RegexFrame;
 
 public class MainFrame extends JFrame {
+
+	private static final long serialVersionUID = 1L;
 	private Controller controller;
 	private JButton AFD;
 	private JButton AFND;
@@ -36,6 +38,7 @@ public class MainFrame extends JFrame {
 		this.controller = controller;
 		this.controller.setAbout(new AboutFrame());
 		this.controller.setRegexFrame(new RegexFrame(this));
+		this.controller.MainAppFrame(this);
 		File is = new File("./resources/Lato/Lato-Regular.ttf");
 		Font Lato = Font.createFont(Font.TRUETYPE_FONT, is);
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();

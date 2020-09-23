@@ -14,6 +14,8 @@ import lf2.flap.views.menus.CanvasPopupMenu;
 import lf2.flap.views.menus.PopupInputMenu;
 
 public class Canvas extends JPanel {
+
+	private static final long serialVersionUID = 1L;
 	private Automaton automaton;
 	private Point mousePoint, statePoint;
 	private CanvasPopupMenu canvasPopupMenu;
