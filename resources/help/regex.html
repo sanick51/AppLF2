@@ -5,8 +5,13 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
 	<style type="text/css">
+		img{
+			max-width: 100%;
+			min-width: 50%;
+		}
 		.card{
 			margin-top: 10px;
+			margin-bottom: 30px;
 		}
 	</style>
 </head>
@@ -27,14 +32,94 @@
 							<li>Click derecho: submenú para asignación de estado inicial o final.</li>
 						</ol>
 					</div>
+
 					<div class="card-body">
 						<p>El control total del canvas se hace con el mouse.</p>
 						<ol>
-							<li>Click izquierdo: Seleccion, creador de transiciones traslación de estados.</li>
+							<li>Click izquierdo (I): Seleccion, creador de transiciones traslación de estados.</li>
 							<li>Doble click izquierdo: Creacion de transicion de bucle en el estado apuntado.</li>
-							<li>Click derecho: Submenú para asignación de estado inicial o final.</li>
+							<li>Click derecho (D): Submenú para asignación de estado inicial o final.</li>
 						</ol>
 					</div>
+
+					<div class="card-body">
+						<h3>Crear un estado</h3>
+						<p>Para crear un <strong>estado</strong> se da click (I) sobre el canvas. </p>
+						<img src="regex/click-canvas.png">
+					</div>
+
+					<div class="card-body">
+						<h3>Seleccionar un estado</h3>
+						<p>Para seleccionar un <strong>estado</strong> se da click (I) en el estado.</p>
+						<img src="regex/click-state.png">
+					</div>
+
+					<div class="card-body">
+						<h3>Arrastrar un estado</h3>
+						<p>Para arrastrar un <strong>estado</strong> se mantiene presionado 
+							click (I) en un estado <strong>seleccionado</strong> y se mueve hasta la posicion deseada.</p>
+						<img src="regex/click-state.png">
+					</div>
+
+					<div class="card-body">
+						<h3>Seleccionar un estado</h3>
+						<p>Para crear una transicion <strong>estado</strong> se mantiene presionado
+							click (I) en un estado <strong>no seleccionado</strong> y se arrastra hasta el estado receptor.</p>
+						<p>Saldrá una casilla para introducir el valor de la <strong>transición</strong>.</p>
+						<img src="regex/create-transition.png">
+						<p>y se creará una flecha con el indicador del valor, esto es la transición.</p>
+						<img src="regex/created-transition.png">
+					</div>
+
+					<div class="card-body">
+						<h3>Establecer estado inicial</h3>
+						<p>Para establecer como inicial un <strong>estado</strong> se da click (D) en un estado 
+							y se selecciona la opcion <strong>inicial</strong>, si ya existe un estado inicial, no parece este campo.</p>
+						<img src="regex/setinit.png">
+						<p>Una flecha apuntando hacia la izquierda junto al nodo indica que es un <strong>estado inicial</strong>.</p>
+						<img src="regex/init.png">
+					</div>
+
+					<div class="card-body">
+						<h3>Establecer estado final</h3>
+						<p>Para establecer como final un <strong>estado</strong> se da click (D) en un estado 
+							y se selecciona la opcion <strong>final</strong>.</p>
+						<img src="regex/setfinal.png">
+						<p>Una circulo interno dentro del estado indica que es un <strong>estado final</strong>.</p>
+						<img src="regex/final.png">
+					</div>
+
+					<div class="card-body">
+						<h3>Generar regex</h3>
+						<p>Para generar una <strong>expresión regular</strong> se diríge a la barra de menú y en la opcion regex.</p>
+						<img src="regex/opregex.png">
+						<p>se selecciona la opción <strong>Generar regex</strong>.</p>
+						<img src="regex/selectgenregex.png">
+						<p>y se mostrará apartir del automata creado la <strong>expresión regular</strong> de ese automata.</p>
+						<img src="regex/resregex.png">
+					</div>
+
+					<div class="card-body">
+						<h3>Generar automata</h3>
+						<p>Para generar un <strong>automata</strong> se diríge a la barra de menú y en la opcion regex.</p>
+						<img src="regex/opregex.png">
+						<p>se selecciona la opción <strong>Generar automata</strong>.</p>
+						<img src="regex/selectgenaut.png">
+						<p>y se mostrará un cuadro pidiendo la expresión regular a transladar.</p>
+						<img src="regex/inputregex.png">
+						<p>se da click en aceptar para generar el automata.</p>
+						<img src="regex/putregex.png">
+						<p>El automata generado se genera con posiciones aleatorias, para que se vea mejor, puede reposicionarse con las opciones del mouse.</p>
+						<img src="regex/resaut.png">
+					</div>
+
+					<div class="card-body">
+						<h3>Reiniciar el canvas</h3>
+						<p>Para reiniciar el canvas se diríge a la barra de menú y en la opcion <strong>App</strong> y luego <strong>Reiniciar canvas</strong>.</p>
+						<img src="regex/selectreset.png">
+					</div>
+
+
 				</div>
 			</div>
 		</div>
