@@ -136,6 +136,26 @@ public class Automaton {
 	}
 	
 	/**
+	 * Elimina un estado y sus transiciones
+	 * @param s estado (objeto)
+	 */
+	public void removeState(State s) {
+		this.states.remove(s);
+		
+		for(Transition t : s.outTransitions) {
+			this.removeTransition(t);
+		}
+		
+		for(Transition t : s.inTransitions) {
+			this.removeTransition(t);
+		}
+		
+		for(Transition t : s.selfTransitions) {
+			this.removeTransition(t);
+		}
+	}
+	
+	/**
 	 * Obtiene la lista de transiciones
 	 * @return states lista
 	 */
